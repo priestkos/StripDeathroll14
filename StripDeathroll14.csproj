@@ -1,0 +1,22 @@
+<Project Sdk="Dalamud.NET.Sdk/15.0.0">
+  <PropertyGroup>
+    <Version>0.1.0</Version>
+    <Description>Hosts Strip Deathroll at a venue. Choose Private (say) or Public (party/alliance), build the player list from your party or by name, and it reads everyone's /random or /dice from chat: opening rolls set the order, each player is called to roll the previous number, a 1, 69 or 666 wins the round, and the winner's pick loses one of three pieces. It alerts on a wrong number or an out-of-turn roll, keeps a round history, and posts your rules and ad texts. Lines are posted only when you press Post unless you turn on auto-post, never more than once every 2 seconds.</Description>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="StripDeathroll14.Tests/**" />
+  </ItemGroup>
+  <PropertyGroup>
+    <Author>PriestKos</Author>
+    <Authors>PriestKos</Authors>
+    <Name>StripDeathroll14</Name>
+    <Punchline>Strip Deathroll host helper: turn order, roll calls, wrong-roll alerts, lives and round history.</Punchline>
+    <RepoUrl>https://github.com/priestkos/StripDeathroll14</RepoUrl>
+    <Tags>deathroll;minigame;random;venue;utility</Tags>
+  </PropertyGroup>
+</Project>
