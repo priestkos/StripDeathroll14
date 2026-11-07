@@ -34,6 +34,9 @@ public sealed class Plugin : IDalamudPlugin
     private readonly MainWindow window;
     private readonly Queue<(string? Prefix, string Text, bool FreeText)> outbox = new();
     private long nextSendAt;
+    private const int RollRepeatMs = 10_000;
+    private (int, Phase, int?) lastRollKey;
+    private long lastRollAt;
 
     public Configuration Config { get; }
     public DeathrollGame Game { get; } = new();
@@ -74,9 +77,13 @@ public sealed class Plugin : IDalamudPlugin
         clientState.Logout += OnLogout;
         framework.Update += OnUpdate;
 
-        commandManager.AddHandler(CommandName, new CommandInfo((_, _) => window.Toggle())
+        commandManager.AddHandler(CommandName, new CommandInfo((_, args) =>
         {
-            HelpMessage = "Open the Strip Deathroll host window.",
+            if (args.Trim().Equals("roll", StringComparison.OrdinalIgnoreCase)) RollForMe();
+            else window.Toggle();
+        })
+        {
+            HelpMessage = "Open the Strip Deathroll window. /sdr roll makes your correct roll (for a hotbar macro).",
         });
     }
 
@@ -121,11 +128,22 @@ public sealed class Plugin : IDalamudPlugin
         if (Game.Current is { } p) Propose(Lines.Call(p.Name, RollCommand(Game.Limit)));
     }
 
-    /// <summary>Your own roll: the opening roll or your turn. Sends the roll command only.</summary>
+    /// <summary>Your roll right now: a fresh /random for the opening or when you start the turns, else the previous roll; null when it is not your roll.</summary>
+    public string? MyRoll => Game.Find(MyName) is { Out: false } me &&
+        (Game.Phase == Phase.Opening && me.Opening is null || Game.Phase == Phase.Turns && Game.Current == me)
+            ? RollCommand(Game.Phase == Phase.Opening ? null : Game.Limit)
+            : null;
+
+    /// <summary>Sends your roll once per game state; a second press within 10 s of the same state is refused, never queued.</summary>
     public void RollForMe()
     {
-        int? n = Game.Phase == Phase.Opening ? null : Game.Limit;
-        outbox.Enqueue((null, RollCommand(n), false));
+        if (MyRoll is not { } cmd) { Alert("It is not your roll."); return; }
+        var key = (Game.Round, Game.Phase, Game.Limit);
+        var now = Environment.TickCount64;
+        if (key == lastRollKey && now - lastRollAt < RollRepeatMs) return;
+        lastRollKey = key;
+        lastRollAt = now;
+        outbox.Enqueue((null, cmd, false));
     }
 
     public void PostProposed()
@@ -221,7 +239,7 @@ public sealed class Plugin : IDalamudPlugin
                 Alert($"{player!.Name} rolled out of turn ({Game.Current?.Name} is up). Ignored.");
                 break;
             case RollOutcome.WrongMax:
-                Alert($"{player!.Name} rolled {r.Value} out of {shownMax}, expected {Game.Limit}. Accept it or ask for a reroll.");
+                Alert($"{player!.Name} rolled {r.Value} out of {shownMax}, expected {RollCommand(Game.Limit)}. Accept it or ask for a reroll.");
                 break;
             default:
                 Handle(outcome, player);

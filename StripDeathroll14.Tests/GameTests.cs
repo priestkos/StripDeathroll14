@@ -51,7 +51,7 @@ public class GameTests
     }
 
     [Fact]
-    public void OpeningSetsOrderHighToLowAndFirstLimit()
+    public void OpeningSetsOrderHighToLowAndStarterRollsFresh()
     {
         var g = Game("Ann Lee", "Bo Ray", "Cy Dee");
         g.StartRound();
@@ -64,7 +64,7 @@ public class GameTests
         Assert.Equal(RollOutcome.OrderSet, g.OnRoll(P(g, "Cy Dee"), 400, null));
         Assert.Equal(["Bo Ray", "Cy Dee", "Ann Lee"], g.Players.Select(p => p.Name));
         Assert.Equal("Bo Ray", g.Current!.Name);
-        Assert.Equal(812, g.Limit);
+        Assert.Null(g.Limit); // the starter rolls a fresh /random, not up to their opening roll
         Assert.False(g.OpeningTie);
     }
 
@@ -72,8 +72,12 @@ public class GameTests
     public void TurnsLoopAndAlertOnWrongMaxAndOutOfTurn()
     {
         var g = Opened(out _);
-        // order Ann (900), Bo (500); limit 900
+        // order Ann (900), Bo (500); Ann starts with a fresh /random
         Assert.Equal(RollOutcome.OutOfTurn, g.OnRoll(P(g, "Bo Ray"), 3, 900));
+        Assert.Equal(RollOutcome.WrongMax, g.OnRoll(P(g, "Ann Lee"), 3, 10)); // /random 10 instead of a fresh /random
+        Assert.Equal(RollOutcome.Next, g.AcceptPending());
+        Assert.Equal(3, g.Limit);
+        Assert.Equal(RollOutcome.Next, g.OnRoll(P(g, "Bo Ray"), 3, 3));
         Assert.Equal(RollOutcome.WrongMax, g.OnRoll(P(g, "Ann Lee"), 300, 999));
         Assert.Equal(300, g.Pending!.Value.Value);
         Assert.Equal("Ann Lee", g.Current!.Name); // not advanced
@@ -93,7 +97,7 @@ public class GameTests
     public void EndingRollsWinAndPickCostsALife(int ending)
     {
         var g = Opened(out _);
-        Assert.Equal(RollOutcome.Won, g.OnRoll(P(g, "Ann Lee"), ending, 900));
+        Assert.Equal(RollOutcome.Won, g.OnRoll(P(g, "Ann Lee"), ending, null));
         Assert.Equal(Phase.Pick, g.Phase);
         Assert.False(g.Pick(P(g, "Ann Lee"))); // winner cannot pick themselves
         Assert.True(g.Pick(P(g, "Bo Ray")));
@@ -131,7 +135,7 @@ public class GameTests
         g.OnRoll(P(g, "Ann Lee"), 900, null);
         g.OnRoll(P(g, "Cy Dee"), 100, null);
         Assert.Equal("Ann Lee", g.Current!.Name);
-        g.OnRoll(P(g, "Ann Lee"), 50, 900);
+        g.OnRoll(P(g, "Ann Lee"), 50, null);
         Assert.Equal("Cy Dee", g.Current!.Name);
         g.OnRoll(P(g, "Cy Dee"), 20, 50);
         Assert.Equal("Ann Lee", g.Current!.Name);
@@ -154,10 +158,30 @@ public class GameTests
         Assert.Equal(["Ann Lee", "Cy Dee", "Bo Ray"], g.Players.Select(p => p.Name));
         g.Remove(P(g, "Ann Lee")); // current leaves: the next in the list is up, same limit
         Assert.Equal("Cy Dee", g.Current!.Name);
-        Assert.Equal(900, g.Limit);
+        Assert.Null(g.Limit); // whoever starts the turns rolls fresh
         g.Remove(P(g, "Cy Dee"));
         Assert.Equal(Phase.Setup, g.Phase); // one player left cannot play
         g.Move(P(g, "Bo Ray"), -1); // out of range: no-op
+    }
+
+    [Fact]
+    public void StarterAcceptsBareOr999AndNextRollsToIt()
+    {
+        foreach (int? max in new int?[] { null, 999 })
+        {
+            var g = Opened(out _);
+            Assert.Equal(RollOutcome.Next, g.OnRoll(P(g, "Ann Lee"), 412, max));
+            Assert.Equal(412, g.Limit);
+            Assert.Equal("Bo Ray, roll /random 412", Lines.Call(g.Current!.Name, Lines.RollCommand(Venue.Private, false, g.Limit)));
+        }
+
+        var r = Game("Ann Lee", "Bo Ray");
+        r.StartRound();
+        r.OnRoll(P(r, "Ann Lee"), 900, null);
+        r.OnRoll(P(r, "Bo Ray"), 10, null);
+        r.OnRoll(P(r, "Ann Lee"), 50, null);
+        r.StartRound(); // restart: next starter is fresh again
+        Assert.Null(r.Limit);
     }
 
     [Fact]
@@ -217,7 +241,7 @@ public class GameTests
                     foreach (var p in g.Active.Where(p => p.Opening is null).ToList()) g.OnRoll(p, rng.Next(1, 1000), null);
                 else if (g.Phase == Phase.Turns)
                 {
-                    var out1 = g.OnRoll(g.Current, rng.Next(1, g.Limit + 1), g.Limit);
+                    var out1 = g.OnRoll(g.Current, rng.Next(1, (g.Limit ?? DeathrollGame.OpeningMax) + 1), g.Limit);
                     Assert.True(out1 is RollOutcome.Next or RollOutcome.Won);
                 }
                 else if (g.Phase == Phase.Pick)

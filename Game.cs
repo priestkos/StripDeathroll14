@@ -56,7 +56,8 @@ public sealed class DeathrollGame
     public Phase Phase { get; private set; } = Phase.Setup;
     public int Round { get; private set; }
     public Player? Current { get; private set; }
-    public int Limit { get; private set; }
+    /// <summary>The number the current player rolls to; null = a fresh /random (the player starting the turns).</summary>
+    public int? Limit { get; private set; }
     public Player? Winner { get; private set; }
     public int WinningRoll { get; private set; }
     public PendingRoll? Pending { get; private set; }
@@ -103,6 +104,7 @@ public sealed class DeathrollGame
         Round++;
         Phase = Phase.Opening;
         Current = Winner = null;
+        Limit = null;
         Pending = null;
         OpeningTie = false;
     }
@@ -134,7 +136,7 @@ public sealed class DeathrollGame
 
         if (Phase != Phase.Turns) return RollOutcome.Ignored;
         if (p != Current) return RollOutcome.OutOfTurn;
-        if (max != Limit)
+        if (Limit is null ? max is not (null or OpeningMax) : max != Limit)
         {
             Pending = new PendingRoll(p, value, max);
             return RollOutcome.WrongMax;
@@ -188,7 +190,7 @@ public sealed class DeathrollGame
         Players.AddRange(outs);
         OpeningTie = active.Count > 1 && active[0].Opening == active[1].Opening;
         Current = active[0];
-        Limit = Math.Max(active[0].Opening ?? OpeningMax, 2);
+        Limit = null; // the starting player rolls a fresh /random
         Phase = Phase.Turns;
     }
 

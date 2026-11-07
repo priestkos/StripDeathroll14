@@ -70,9 +70,9 @@ public sealed class MainWindow : Window
 
         using (ImRaii.Disabled(!game.CanStartRound)) { if (ImGui.Button(game.Phase == Phase.Setup ? "Start round" : "Restart round")) plugin.StartRound(); }
         ImGui.SameLine();
-        var myTurn = game.Find(plugin.MyName) is { } me &&
-            (game.Phase == Phase.Opening && me.Opening is null && !me.Out || game.Phase == Phase.Turns && game.Current == me);
-        using (ImRaii.Disabled(!myTurn)) { if (ImGui.Button("Roll for me")) plugin.RollForMe(); }
+        var myRoll = plugin.MyRoll;
+        using (ImRaii.Disabled(myRoll is null)) { if (ImGui.Button(myRoll is null ? "Roll for me" : $"Roll for me: {myRoll}")) plugin.RollForMe(); }
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled)) ImGui.SetTooltip("Your roll: a fresh /random to open or to start the turns, else up to the previous roll. /sdr roll does the same from a macro.");
         ImGui.SameLine();
         using (ImRaii.Disabled(game.Current is null)) { if (ImGui.Button("Call again")) plugin.CallCurrent(); }
         ImGui.SameLine();
