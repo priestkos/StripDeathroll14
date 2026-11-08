@@ -1,8 +1,12 @@
 # StripDeathroll14
 
+<img src="images/icon.png" width="96">
+
 A host helper for Strip Deathroll at FFXIV venues: it keeps the turn order, calls each player to roll, catches wrong rolls, and tracks pieces and round history.
 
 `/sdr` · Dalamud API 15 · .NET 10
+
+> **No support will be provided. This software is to be used as is, without warranty of any kind.**
 
 ## What it does
 
@@ -52,6 +56,10 @@ dotnet build -c Debug      # load bin/Debug/StripDeathroll14.dll as a dev plugin
 dotnet build -c Release    # zip in bin/Release/StripDeathroll14/latest.zip
 ```
 
+## Install
+
+Add `https://raw.githubusercontent.com/priestkos/PlogonYes/main/pluginmaster.json` under `/xlsettings` → Experimental → Custom Plugin Repositories, then install **StripDeathroll14** from `/xlplugins`.
+
 ## Install (dev plugin)
 
 1. `/xlsettings` → Experimental → Dev Plugin Locations → add `bin\Debug\StripDeathroll14.dll`.
@@ -68,11 +76,14 @@ dotnet test StripDeathroll14.Tests    # 16 tests
 
 ## Limits
 
-- Not verified in game: behaviour is taken from the code and the offline tests, not from a live client.
-- English client only: the roll text is localised, so JP/DE/FR rolls are not read.
-- Each round starts with a fresh opening roll; the rules leave open whether the order carries over.
-- `/dice alliance` and alliance detection are unverified in a live alliance.
-- Players and history live for the session only; a plugin reload clears them. Settings and texts are saved.
+- **Not verified in game.** This description comes from the code and the offline tests, not from a live client.
+- **English client only.** The roll regexes match the English messages, so on JP, DE or FR clients no roll is recognised and the game never moves on; nothing is posted wrongly.
+- **Not verified in game:** the chat type a `/dice alliance` line arrives with, and alliance detection in a live alliance. Both come from reading Dalamud and other plugins' code. If either is wrong, those rolls are not read and the turn waits.
+- **`/random` is visible to nearby players** in the /say radius. That is how the game works; Public mode asks for `/dice` so rolls stay in the group.
+- **Each round starts with a fresh opening roll.** The rules leave open whether the order carries over; this plugin re-rolls it.
+- **Session only.** Players and history are cleared by a plugin reload; settings and the rules and ad texts are saved.
+- **Echo alerts need the Echo chat filter ticked** in your chat log tab; the alert also shows in the window.
+- **The text check on rules and ad lines uses the game's sanitiser with a guessed flag set** (letters, numbers, symbols, CJK). A line it would change is dropped with an alert, never sent altered.
 
 ## Layout
 
@@ -82,4 +93,6 @@ Plugin.cs          chat reading, the send queue, party import, alerts
 MainWindow.cs      Game / History / Rules & Ad tabs
 Configuration.cs   saved settings and texts
 StripDeathroll14.Tests/   xUnit tests over Game.cs
+images/            icon.svg (source) and icon.png (manifest icon)
+.github/workflows/ build.yml (build + tests on every push), release.yml (tests, build, release on main)
 ```
