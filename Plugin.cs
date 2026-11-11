@@ -121,7 +121,7 @@ public sealed class Plugin : IDalamudPlugin
         else if (Game.Phase == Phase.Opening) Propose(Lines.Opening(Game.Round, RollCommand(null)));
     }
 
-    public void AcceptPending() => Handle(Game.AcceptPending(), Game.Current);
+    public void AcceptPending() => Handle(Game.AcceptPending());
 
     public void CallCurrent()
     {
@@ -226,7 +226,7 @@ public sealed class Plugin : IDalamudPlugin
         if (roll is not { } r || name is null) return;
         var player = Game.Find(name);
         var outcome = Game.OnRoll(player, r.Value, r.Max);
-        var shownMax = r.Max?.ToString() ?? "999";
+        var shownMax = (r.Max ?? DeathrollGame.OpeningMax).ToString();
         switch (outcome)
         {
             case RollOutcome.OpeningWrongMax:
@@ -242,12 +242,12 @@ public sealed class Plugin : IDalamudPlugin
                 Alert($"{player!.Name} rolled {r.Value} out of {shownMax}, expected {RollCommand(Game.Limit)}. Accept it or ask for a reroll.");
                 break;
             default:
-                Handle(outcome, player);
+                Handle(outcome);
                 break;
         }
     }
 
-    private void Handle(RollOutcome outcome, Player? player)
+    private void Handle(RollOutcome outcome)
     {
         switch (outcome)
         {
