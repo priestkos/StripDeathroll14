@@ -43,6 +43,17 @@ public class GameTests
     public void RandomParserRejectsImpossibleNumbers(string text) => Assert.Null(Rolls.ParseRandom(text));
 
     [Fact]
+    public void RollOfTwoKeepsTheLimitAtTwo()
+    {
+        var g = Opened(out _);
+        Assert.Equal(RollOutcome.Next, g.OnRoll(P(g, "Ann Lee"), 2, null));
+        Assert.Equal(2, g.Limit); // never "/random 1": the next roll can still be 1 or 2
+        Assert.Equal(RollOutcome.WrongMax, g.OnRoll(P(g, "Bo Ray"), 1, 1));
+        Assert.Equal(RollOutcome.Won, g.OnRoll(P(g, "Bo Ray"), 1, 2));
+        Assert.Equal("Bo Ray", g.Winner!.Name);
+    }
+
+    [Fact]
     public void LastRivalLeavingDuringPickDoesNotStrandTheGame()
     {
         var g = Opened(out _);
@@ -64,6 +75,34 @@ public class GameTests
         Assert.Equal(Phase.Setup, g.Phase);
         Assert.Null(g.Current); // "Call again" must not call a turn that no longer exists
         Assert.Equal(RollOutcome.Ignored, g.AcceptPending());
+    }
+
+    [Fact]
+    public void PickRejectsOutOrUnlistedTargets()
+    {
+        var g = Game("Ann Lee", "Bo Ray", "Cy Dee");
+        for (var i = 0; i < 3; i++) WinRound(g, "Ann Lee", "Bo Ray");
+        WinRoundNoPick(g, "Ann Lee");
+        Assert.False(g.Pick(P(g, "Bo Ray")));                 // out
+        Assert.False(g.Pick(new Player { Name = "Zed Zee" })); // not on the list
+        Assert.Empty(g.History.Where(r => r.Round == g.Round));
+    }
+
+    [Fact]
+    public void CrossWorldRollerIsFoundAndSpectatorsAreNot()
+    {
+        var g = Game("Ann Lee", "Bo Ray");
+        Assert.Equal("Ann Lee", g.Find("Ann Lee\uE05DCactuar")!.Name);
+        Assert.Null(g.Find("Ann Leez"));
+        Assert.Null(g.Find(""));
+    }
+
+    [Fact]
+    public void SendableCapCountsBytesNotChars()
+    {
+        Assert.True(Lines.IsSendable(new string('あ', 133)));  // 399 bytes
+        Assert.False(Lines.IsSendable(new string('あ', 134))); // 402 bytes
+        Assert.False(Lines.IsSendable(""));
     }
 
     [Fact]
@@ -317,4 +356,10 @@ public class GameTests
         Assert.True(g.Pick(P(g, target)));
     }
 
+    private static void WinRoundNoPick(DeathrollGame g, string winner)
+    {
+        if (g.Phase == Phase.Setup) g.StartRound();
+        foreach (var p in g.Active.ToList()) g.OnRoll(p, p.Name == winner ? 999 : 10, null);
+        Assert.Equal(RollOutcome.Won, g.OnRoll(g.Current, 1, g.Limit));
+    }
 }
