@@ -43,6 +43,30 @@ public class GameTests
     public void RandomParserRejectsImpossibleNumbers(string text) => Assert.Null(Rolls.ParseRandom(text));
 
     [Fact]
+    public void LastRivalLeavingDuringPickDoesNotStrandTheGame()
+    {
+        var g = Opened(out _);
+        g.OnRoll(P(g, "Ann Lee"), 1, null);
+        Assert.Equal(Phase.Pick, g.Phase);
+        g.Remove(P(g, "Bo Ray"));
+        Assert.NotEqual(Phase.Pick, g.Phase); // nobody left to pick; Pick would wait forever
+        Assert.Null(g.Current);
+        Assert.True(g.Add("Cy Dee"));
+        Assert.True(g.CanStartRound);
+    }
+
+    [Fact]
+    public void DroppingToSetupClearsTheTurn()
+    {
+        var g = Opened(out _);
+        g.OnRoll(P(g, "Ann Lee"), 300, 10); // pending wrong max
+        g.Remove(P(g, "Bo Ray"));
+        Assert.Equal(Phase.Setup, g.Phase);
+        Assert.Null(g.Current); // "Call again" must not call a turn that no longer exists
+        Assert.Equal(RollOutcome.Ignored, g.AcceptPending());
+    }
+
+    [Fact]
     public void NameMatchingHandlesGlyphsAndWorlds()
     {
         Assert.True(Names.Matches("Ann Lee", "Ann Lee"));

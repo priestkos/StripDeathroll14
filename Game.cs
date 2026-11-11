@@ -84,7 +84,7 @@ public sealed class DeathrollGame
         if (Pending?.Player == p) Pending = null;
         Players.Remove(p);
         if (Phase == Phase.Opening && Active.Any() && Active.All(x => x.Opening is not null)) SetOrder();
-        if (Phase is Phase.Opening or Phase.Turns && Active.Count() < 2) Phase = Phase.Setup;
+        if (Phase is Phase.Opening or Phase.Turns or Phase.Pick && Active.Count() < 2) { Phase = Phase.Setup; Current = null; }
     }
 
     public void Move(Player p, int delta)
