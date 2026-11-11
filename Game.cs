@@ -241,11 +241,11 @@ public readonly record struct ParsedRoll(string? Name, int Value, int? Max);
 public static partial class Rolls
 {
     // "Random! You roll a 7 (out of 10)." / "Random! Ann Lee rolls a 7." (bare /random has no "out of")
-    [GeneratedRegex(@"^Random! (?:You roll|(.+?) rolls) a (\d+)(?: \(out of (\d+)\))?\.$")]
+    [GeneratedRegex(@"^Random! (?:You roll|(.+?) rolls) a ([0-9]{1,9})(?: \(out of ([0-9]{1,9})\))?\.$")]
     private static partial Regex RandomRegex();
 
     // "/dice" in a chat mode: "Random! (1-10) 7", the roller is the message sender; a bare /dice has no range.
-    [GeneratedRegex(@"^Random! (?:\(1-(\d+)\) )?(\d+)$")]
+    [GeneratedRegex(@"^Random! (?:\(1-([0-9]{1,9})\) )?([0-9]{1,9})$")]
     private static partial Regex DiceRegex();
 
     /// <summary>A /random result; Name is null for your own roll.</summary>
@@ -253,8 +253,8 @@ public static partial class Rolls
     {
         var m = RandomRegex().Match(text.Trim());
         if (!m.Success) return null;
-        return new ParsedRoll(m.Groups[1].Success ? m.Groups[1].Value : null, int.Parse(m.Groups[2].Value),
-            m.Groups[3].Success ? int.Parse(m.Groups[3].Value) : null);
+        return Checked(new ParsedRoll(m.Groups[1].Success ? m.Groups[1].Value : null, int.Parse(m.Groups[2].Value),
+            m.Groups[3].Success ? int.Parse(m.Groups[3].Value) : null));
     }
 
     /// <summary>A /dice result; the caller supplies the name from the sender.</summary>
@@ -262,8 +262,11 @@ public static partial class Rolls
     {
         var m = DiceRegex().Match(text.Trim());
         if (!m.Success) return null;
-        return new ParsedRoll(null, int.Parse(m.Groups[2].Value), m.Groups[1].Success ? int.Parse(m.Groups[1].Value) : null);
+        return Checked(new ParsedRoll(null, int.Parse(m.Groups[2].Value), m.Groups[1].Success ? int.Parse(m.Groups[1].Value) : null));
     }
+
+    // Party chat is typed text, so a /dice-shaped line can be forged: drop numbers no real roll produces.
+    private static ParsedRoll? Checked(ParsedRoll r) => r.Value >= 1 && r.Value <= (r.Max ?? int.MaxValue) ? r : null;
 }
 
 /// <summary>Every line the plugin posts, and the command prefixes it posts them with.</summary>

@@ -25,6 +25,23 @@ public class GameTests
         Assert.Null(Rolls.ParseDice("Random! (1-10) 7 extra"));
     }
 
+    // /dice lines come from Party chat, which anyone in the party can type: the parser must not throw and must
+    // drop numbers no real roll produces.
+    [Theory]
+    [InlineData("Random! (1-99999999999) 5")]   // int overflow
+    [InlineData("Random! 99999999999")]
+    [InlineData("Random! (1-10) \u0663")]       // Arabic-Indic digit: \d matches it, int.Parse throws
+    [InlineData("Random! (1-10) 0")]
+    [InlineData("Random! (1-10) 11")]           // above the range
+    [InlineData("Random! (1-0) 0")]
+    public void DiceParserRejectsImpossibleOrForgedNumbers(string text) => Assert.Null(Rolls.ParseDice(text));
+
+    [Theory]
+    [InlineData("Random! Ann Lee rolls a 99999999999.")]
+    [InlineData("Random! Ann Lee rolls a 11 (out of 10).")]
+    [InlineData("Random! You roll a 0 (out of 10).")]
+    public void RandomParserRejectsImpossibleNumbers(string text) => Assert.Null(Rolls.ParseRandom(text));
+
     [Fact]
     public void NameMatchingHandlesGlyphsAndWorlds()
     {
@@ -275,4 +292,5 @@ public class GameTests
         Assert.Equal(RollOutcome.Won, g.OnRoll(g.Current, 1, g.Limit));
         Assert.True(g.Pick(P(g, target)));
     }
+
 }
