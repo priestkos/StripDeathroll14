@@ -162,12 +162,10 @@ jobs:
             $dllEntries = @($archive.Entries | Where-Object { $_.Name -like '*.dll' })
             if ($dllEntries.Count -eq 0) { throw 'No plugin .dll found inside latest.zip' }
 
-            [xml]$proj = Get-Content -LiteralPath 'StripDeathroll14.csproj'
-            $assemblyBase = ($proj.Project.PropertyGroup | ForEach-Object { $_.Name } | Where-Object { $_ } | Select-Object -First 1)
-            if (-not $assemblyBase) { $assemblyBase = 'StripDeathroll14' }
+            $assemblyBase = 'StripDeathroll14'
             $preferredDll = "$assemblyBase.dll"
             $dllEntry = $dllEntries | Where-Object { $_.Name -eq $preferredDll } | Select-Object -First 1
-            if (-not $dllEntry) { $dllEntry = $dllEntries | Select-Object -First 1 }
+            if (-not $dllEntry) { throw "$preferredDll not found inside latest.zip" }
 
             $manifestName = [System.IO.Path]::ChangeExtension($dllEntry.Name, '.json')
             $manifestEntry = $archive.Entries | Where-Object { $_.Name -eq $manifestName } | Select-Object -First 1
