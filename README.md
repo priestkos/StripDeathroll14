@@ -8,6 +8,26 @@ A host helper for Strip Deathroll at FFXIV venues: it keeps the turn order, call
 
 > **No support will be provided. This software is to be used as is, without warranty of any kind.**
 
+## Screenshots
+
+These images are **mock-ups** (HTML rendered to PNG). They are not real in-game captures and do not show the actual FFXIV client UI.
+
+| | |
+| --- | --- |
+| ![Setup mock-up](docs/screenshots/01-setup-venue-players.png) | **Setup** — Game tab with the Venue dropdown open (Private room / Public) and four players added with *Add party/alliance*. |
+| ![Roll for me mock-up](docs/screenshots/02-turns-roll-for-me.png) | **Your turn** — Public venue: the opening `/dice party` rolls set the order high to low, *Roll for me* shows `/dice party 412`, and the next call waits for *Post*. |
+| ![Wrong roll mock-up](docs/screenshots/03-wrong-roll-alert.png) | **Wrong roll** — a bare `/random` when `/random 532` was due: a red alert in the window, a `[Deathroll]` line in Echo, and *Accept 57* / *Ask for reroll*. |
+| ![Who strips mock-up](docs/screenshots/04-who-strips.png) | **Who strips?** — a 69 wins the round; the winner picks from the other active players. |
+| ![History mock-up](docs/screenshots/05-history.png) | **History** — four rounds, newest first: winner, winning roll (1, 69, 666), who stripped and pieces left, down to out. |
+| ![Rules and Ad mock-up](docs/screenshots/06-rules-and-ad.png) | **Rules & Ad** — the default texts, posted one chat line per text line to Say. |
+
+## Mock-up video
+
+A short **mock-up** walkthrough (not real gameplay) cross-fades through setup, your turn, a wrong-roll alert, *Who strips?* and the Rules & Ad tab with bottom captions. The gold **Mock-up** label stays visible for the whole clip.
+
+- [mockup-walkthrough.mp4](docs/videos/mockup-walkthrough.mp4) (H.264, 1280×720, ~15 s)
+- [mockup-walkthrough.gif](docs/videos/mockup-walkthrough.gif) (preview)
+
 ## What it does
 
 - **Private or Public** — a dropdown. Private room: calls go to `/s` and players roll `/random N`. Public: calls go to `/p` (or `/a` when you are in an alliance) and players roll `/dice party N` / `/dice alliance N`, so the rolls stay in the group. Rolls are read in every form either way.
@@ -94,6 +114,7 @@ Plugin.cs          chat reading, the send queue, party import, alerts
 MainWindow.cs      Game / History / Rules & Ad tabs
 Configuration.cs   saved settings and texts
 StripDeathroll14.Tests/   xUnit tests over Game.cs
+docs/              mock-up screenshots and walkthrough video
 images/            icon.svg (source) and icon.png (manifest icon)
 .github/workflows/ build.yml (build + tests on every push), release.yml (tests, build, release on main)
 ```

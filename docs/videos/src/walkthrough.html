@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>StripDeathroll14 mock-up walkthrough</title>
+    <link rel="stylesheet" href="../../screenshots/src/common.css" />
+    <style>
+      .scene { position: absolute; inset: 0; opacity: 0; will-change: transform, opacity; }
+      .video-caption {
+        position: absolute; bottom: 0; left: 0; right: 0; z-index: 9000; padding: 14px 20px;
+        font-size: 15px; font-weight: 600; text-align: center; color: #fff;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+        text-shadow: 0 1px 4px #000;
+      }
+      .mockup-banner { font-size: 14px; padding: 8px 16px; }
+      /* clear of the bottom caption */
+      .chat-panel { bottom: 96px; }
+      .chat-line { opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div class="game-backdrop"></div>
+    <div class="mockup-banner">Mock-up</div>
+    <div id="scene1" class="scene"><div class="imgui-window" style="top: 64px; left: 700px; width: 520px; height: 560px; overflow: hidden;"><div class="imgui-titlebar"><span>Strip Deathroll</span><span class="close">✕</span></div><div class="imgui-body"><div class="tabs"><span class="tab active">Game</span><span class="tab">History</span><span class="tab">Rules &amp; Ad</span></div><div class="field-row"><span class="combo" style="width:220px">Private room (say)</span><span>Venue</span><span class="checkbox-box" style="margin-left:6px"></span><span>Auto-post</span><div class="popup"><div class="sel">Private room (say)</div><div>Public (party/alliance)</div></div></div><div class="t dis">Calls go to /s; players roll /random [N].</div><div class="sep"></div><div class="t">Add at least 2 players, then Start round.</div><div class="btns"><span class="btn">Start round</span><span class="btn disabled">Roll for me</span><span class="btn disabled">Call again</span><span class="btn">New game</span></div><div class="sep"></div><div class="field-row"><span class="input dis" style="width:200px">Forename Surname</span><span class="btn">Add</span><span class="btn">Add party/alliance</span></div><div class="t dis">Added 4 player(s).</div><table class="players"><tr><th style="width:22px">#</th><th>Player</th><th style="width:58px">Opening</th><th style="width:48px">Pieces</th><th style="width:38px">Wins</th><th style="width:88px"></th></tr><tr><td>1</td><td>Wol Adventurer</td><td>-</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>2</td><td>Wol Companion</td><td>-</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>3</td><td>Wol Wanderer</td><td>-</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>4</td><td>Wol Traveller</td><td>-</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr></table></div></div></div>
+    <div id="scene2" class="scene"><div class="imgui-window" style="top: 64px; left: 700px; width: 520px; height: 560px; overflow: hidden;"><div class="imgui-titlebar"><span>Strip Deathroll</span><span class="close">✕</span></div><div class="imgui-body"><div class="tabs"><span class="tab active">Game</span><span class="tab">History</span><span class="tab">Rules &amp; Ad</span></div><div class="field-row"><span class="combo" style="width:220px">Public (party/alliance)</span><span>Venue</span><span class="checkbox-box" style="margin-left:6px"></span><span>Auto-post</span></div><div class="t dis">Calls go to /p; players roll /dice party [N].</div><div class="sep"></div><div class="t">Round 1: Wol Adventurer to roll /dice party 412.</div><div class="btns"><span class="btn">Restart round</span><span class="btn">Roll for me: /dice party 412</span><span class="btn">Call again</span><span class="btn">New game</span></div><div class="sep"></div><div class="t">To post in /p:</div><div class="t bullet">Wol Adventurer, roll /dice party 412</div><div class="btns"><span class="btn">Post</span><span class="btn">Discard</span></div><div class="sep"></div><div class="field-row"><span class="input dis" style="width:200px">Forename Surname</span><span class="btn">Add</span><span class="btn">Add party/alliance</span></div><div class="t dis">Added 4 player(s).</div><table class="players"><tr><th style="width:22px">#</th><th>Player</th><th style="width:58px">Opening</th><th style="width:48px">Pieces</th><th style="width:38px">Wins</th><th style="width:88px"></th></tr><tr><td>1</td><td>Wol Companion</td><td>871</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>></td><td><span class="green">Wol Adventurer</span></td><td>640</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>3</td><td>Wol Wanderer</td><td>233</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>4</td><td>Wol Traveller</td><td>95</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr></table></div></div><div class="chat-panel"><div class="chat-line party">(Wol Adventurer) Strip Deathroll round 1! Everyone roll /dice party - highest goes first.</div><div class="chat-line party">(Wol Companion) Random! 871</div><div class="chat-line party">(Wol Adventurer) Random! 640</div><div class="chat-line party">(Wol Wanderer) Random! 233</div><div class="chat-line party">(Wol Traveller) Random! 95</div><div class="chat-line party">(Wol Adventurer) Wol Companion, roll /dice party</div><div class="chat-line party">(Wol Companion) Random! 412</div></div></div>
+    <div id="scene3" class="scene"><div class="imgui-window" style="top: 64px; left: 700px; width: 520px; height: 560px; overflow: hidden;"><div class="imgui-titlebar"><span>Strip Deathroll</span><span class="close">✕</span></div><div class="imgui-body"><div class="tabs"><span class="tab active">Game</span><span class="tab">History</span><span class="tab">Rules &amp; Ad</span></div><div class="field-row"><span class="combo" style="width:220px">Private room (say)</span><span>Venue</span><span class="checkbox-box" style="margin-left:6px">✓</span><span>Auto-post</span></div><div class="t dis">Calls go to /s; players roll /random [N].</div><div class="sep"></div><div class="t">Round 1: Wol Wanderer to roll /random 532.</div><div class="t red">Wol Wanderer rolled 57 out of 999, expected /random 532. Accept it or ask for a reroll.</div><div class="btns"><span class="btn">Accept 57</span><span class="btn">Ask for reroll</span></div><div class="btns"><span class="btn">Restart round</span><span class="btn disabled">Roll for me</span><span class="btn">Call again</span><span class="btn">New game</span></div><div class="sep"></div><div class="field-row"><span class="input dis" style="width:200px">Forename Surname</span><span class="btn">Add</span><span class="btn">Add party/alliance</span></div><div class="t dis">Added 4 player(s).</div><table class="players"><tr><th style="width:22px">#</th><th>Player</th><th style="width:58px">Opening</th><th style="width:48px">Pieces</th><th style="width:38px">Wins</th><th style="width:88px"></th></tr><tr><td>1</td><td>Wol Companion</td><td>871</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>2</td><td>Wol Adventurer</td><td>640</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>></td><td><span class="green">Wol Wanderer</span></td><td>233</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>4</td><td>Wol Traveller</td><td>95</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr></table></div></div><div class="chat-panel"><div class="chat-line say">Wol Adventurer: Wol Companion, roll /random</div><div class="chat-line random">Random! Wol Companion rolls a 788.</div><div class="chat-line say">Wol Adventurer: Wol Adventurer, roll /random 788</div><div class="chat-line random">Random! You roll a 532 (out of 788).</div><div class="chat-line say">Wol Adventurer: Wol Wanderer, roll /random 532</div><div class="chat-line random">Random! Wol Wanderer rolls a 57.</div><div class="chat-line echo">[Deathroll] Wol Wanderer rolled 57 out of 999, expected /random 532. Accept it or ask for a reroll.</div></div></div>
+    <div id="scene4" class="scene"><div class="imgui-window" style="top: 64px; left: 700px; width: 520px; height: 560px; overflow: hidden;"><div class="imgui-titlebar"><span>Strip Deathroll</span><span class="close">✕</span></div><div class="imgui-body"><div class="tabs"><span class="tab active">Game</span><span class="tab">History</span><span class="tab">Rules &amp; Ad</span></div><div class="field-row"><span class="combo" style="width:220px">Private room (say)</span><span>Venue</span><span class="checkbox-box" style="margin-left:6px"></span><span>Auto-post</span></div><div class="t dis">Calls go to /s; players roll /random [N].</div><div class="sep"></div><div class="t">Round 1: Wol Wanderer rolled 69 and wins.</div><div class="field-row"><span class="combo" style="width:220px">Choose...</span><span>Who strips?</span><span class="btn disabled">Confirm</span><div class="popup"><div>Wol Companion (3 left)</div><div>Wol Adventurer (3 left)</div><div>Wol Traveller (3 left)</div></div></div><div class="btns"><span class="btn disabled">Restart round</span><span class="btn disabled">Roll for me</span><span class="btn">Call again</span><span class="btn">New game</span></div><div class="sep"></div><div class="t">To post in /s:</div><div class="t bullet">Wol Wanderer rolled 69 and wins round 1! Wol Wanderer, who strips?</div><div class="btns"><span class="btn">Post</span><span class="btn">Discard</span></div><div class="sep"></div><div class="field-row"><span class="input dis" style="width:200px">Forename Surname</span><span class="btn">Add</span><span class="btn">Add party/alliance</span></div><div class="t dis">Added 4 player(s).</div><table class="players"><tr><th style="width:22px">#</th><th>Player</th><th style="width:58px">Opening</th><th style="width:48px">Pieces</th><th style="width:38px">Wins</th><th style="width:88px"></th></tr><tr><td>1</td><td>Wol Companion</td><td>871</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>2</td><td>Wol Adventurer</td><td>640</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>></td><td><span class="green">Wol Wanderer</span></td><td>233</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr><tr><td>4</td><td>Wol Traveller</td><td>95</td><td>3</td><td>0</td><td><span class="sbtn">Up</span><span class="sbtn">Dn</span><span class="sbtn">X</span></td></tr></table></div></div><div class="chat-panel"><div class="chat-line say">Wol Adventurer: Wol Wanderer, roll /random 532</div><div class="chat-line random">Random! Wol Wanderer rolls a 69 (out of 532).</div></div></div>
+    <div id="scene5" class="scene"><div class="imgui-window" style="top: 64px; left: 700px; width: 520px; height: 560px; overflow: hidden; font-size: 13px;"><div class="imgui-titlebar"><span>Strip Deathroll</span><span class="close">✕</span></div><div class="imgui-body"><div class="tabs"><span class="tab">Game</span><span class="tab">History</span><span class="tab active">Rules &amp; Ad</span></div><div class="field-row"><span class="combo" style="width:160px">Say</span><span>Post to</span></div><div class="t dis">One chat line per text line, up to 10, 2-3.5 s apart.</div><div class="sep"></div><div class="t">Rules</div><div class="multiline">Strip Deathroll! Everyone rolls /random to start; highest goes first, then down the list.
+On your turn, roll /random up to the number the player before you rolled.
+Roll a 1, 69 or 666 to win the round - then you pick who strips.
+Everyone has 3 pieces. Lose all 3 and you are out!</div><span class="btn">Post rules</span><div class="sep"></div><div class="t">Ad</div><div class="multiline">Strip Deathroll starting soon! Ask to join the game.</div><span class="btn">Post ad</span></div></div><div class="chat-panel"><div class="chat-line say">Wol Adventurer: Strip Deathroll! Everyone rolls /random to start; highest goes first, then down the list.</div><div class="chat-line say">Wol Adventurer: On your turn, roll /random up to the number the player before you rolled.</div><div class="chat-line say">Wol Adventurer: Roll a 1, 69 or 666 to win the round - then you pick who strips.</div><div class="chat-line say">Wol Adventurer: Everyone has 3 pieces. Lose all 3 and you are out!</div></div></div>
+    <div class="video-caption" id="caption"></div>
+    <script>
+      // Scenes mirror docs/screenshots/src 01-04 and 06; one caption per beat.
+      const scenes = [
+  {
+    "id": "scene1",
+    "start": 0.0,
+    "end": 3.2,
+    "caption": "Game tab \u2014 pick the venue, add your party with one button; the list is the turn order"
+  },
+  {
+    "id": "scene2",
+    "start": 2.7,
+    "end": 5.9,
+    "caption": "Opening rolls set the order \u2014 Roll for me sends exactly the command it shows"
+  },
+  {
+    "id": "scene3",
+    "start": 5.4,
+    "end": 8.6,
+    "caption": "Wrong number? A [Deathroll] Echo alert, and the roll waits: Accept it or ask for a reroll"
+  },
+  {
+    "id": "scene4",
+    "start": 8.1,
+    "end": 11.3,
+    "caption": "Roll a 1, 69 or 666 to win the round \u2014 the winner picks who strips"
+  },
+  {
+    "id": "scene5",
+    "start": 10.8,
+    "end": 15.0,
+    "caption": "Rules & Ad \u2014 saved texts posted line by line to Say, Yell or Party"
+  }
+];
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const FADE = 0.5;
+
+      window.seekWalkthrough = (t) => {
+        let caption = "";
+        for (const s of scenes) {
+          const el = document.getElementById(s.id);
+          const fin = s.start === 0 ? 1 : ease(clamp((t - s.start) / FADE, 0, 1));
+          const fout = s.end >= 15 ? 1 : ease(clamp((s.end - t) / FADE, 0, 1));
+          const o = Math.min(fin, fout);
+          el.style.opacity = o;
+          el.style.transform = `translateY(${(1 - fin) * 12}px)`;
+          // chat lines arrive one by one, as they would in the log
+          el.querySelectorAll(".chat-line").forEach((line, i) => {
+            line.style.opacity = clamp((t - s.start - 0.2 - i * 0.22) / 0.2, 0, 1);
+          });
+          if (t >= s.start + (s.start === 0 ? 0 : FADE / 2)) caption = s.caption;
+        }
+        document.getElementById("caption").textContent = caption;
+      };
+      window.seekWalkthrough(0);
+    </script>
+  </body>
+</html>
