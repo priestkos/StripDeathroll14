@@ -80,6 +80,7 @@ dotnet test StripDeathroll14.Tests    # 16 tests
 - **English client only.** The roll regexes match the English messages, so on JP, DE or FR clients no roll is recognised and the game never moves on; nothing is posted wrongly.
 - **Not verified in game:** the chat type a `/dice alliance` line arrives with, and alliance detection in a live alliance. Both come from reading Dalamud and other plugins' code. If either is wrong, those rolls are not read and the turn waits.
 - **`/random` is visible to nearby players** in the /say radius. That is how the game works; Public mode asks for `/dice` so rolls stay in the group.
+- **A `/dice` roll can be faked.** `/dice` lines are read from Party, Cross-world Party and Alliance chat (in both venue modes), and the plugin does not tell a real one from a player on the list typing `Random! (1-N) 1` there by hand on their turn. When a roll decides the round, check it in chat before you carry on.
 - **Each round starts with a fresh opening roll.** The rules leave open whether the order carries over; this plugin re-rolls it.
 - **Session only.** Players and history are cleared by a plugin reload; settings and the rules and ad texts are saved.
 - **Echo alerts need the Echo chat filter ticked** in your chat log tab; the alert also shows in the window.
